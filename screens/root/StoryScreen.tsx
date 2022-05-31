@@ -1,21 +1,26 @@
-import { StyleSheet } from "react-native";
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  Keyboard,
+  Platform,
+} from "react-native";
+import { Text, View } from "../../components/Themed";
+import { useState } from "react";
+import { RootTabScreenProps } from "../../types";
 
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
-import { RootTabScreenProps } from "../types";
-
-export default function TabOneScreen({
+export default function StoryScreen({
   navigation,
-}: RootTabScreenProps<"TabOne">) {
+}: RootTabScreenProps<"StoryScreen">) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Ondde</Text>
+      <Text style={styles.title}>StoryScreen</Text>
       <View
         style={styles.separator}
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      {/* <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
     </View>
   );
 }
