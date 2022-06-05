@@ -187,7 +187,7 @@ export default function HomeScreen({
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.title}>HomeScreen</Text>
+      {/* <MonoText style={styles.title}>HomeScreen</MonoText>
       <View
         style={styles.separator}
         lightColor="#eee"

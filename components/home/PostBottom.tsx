@@ -19,6 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { screenHeight, screenWidth } from "../../utilies/Device";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AuthService from "../../services/AuthService";
+import { MonoText } from "../StyledText";
 
 export default function PostBottom({
   postItem,
@@ -45,11 +46,13 @@ export default function PostBottom({
       <ScrollView
         horizontal
         contentContainerStyle={{
+          zIndex: 100,
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
           alignSelf: "center",
           marginHorizontal: 5,
+          marginVertical: 3,
           height: 10,
           // backgroundColor: "blue",
         }}
@@ -125,7 +128,7 @@ export default function PostBottom({
           }}
         >
           <TouchableOpacity>
-            <Text
+            <MonoText
               style={{
                 color: Colors[colorScheme].text,
                 fontSize: fontSizes.h6,
@@ -135,13 +138,13 @@ export default function PostBottom({
               }}
             >
               Add a comment ...
-            </Text>
+            </MonoText>
+            {buildLinePicture(numberPicture)}
           </TouchableOpacity>
         </View>
       ) : (
         <View></View>
       )}
-      {buildLinePicture(numberPicture)}
 
       <View
         style={{
@@ -152,7 +155,7 @@ export default function PostBottom({
           backgroundColor: "transparent",
         }}
       >
-        {/* <Text>dsadasdas</Text> */}
+        {/* <MonoText>dsadasdas</MonoText> */}
         <View
           style={{
             flex: 1,
@@ -201,7 +204,7 @@ export default function PostBottom({
             backgroundColor: "transparent",
           }}
         >
-          <Text
+          <MonoText
             style={{
               color: Colors[colorScheme].text,
               fontSize: fontSizes.h6,
@@ -210,8 +213,8 @@ export default function PostBottom({
             }}
           >
             45k like
-          </Text>
-          <Text
+          </MonoText>
+          <MonoText
             style={{
               color: Colors[colorScheme].text,
               fontSize: fontSizes.h6,
@@ -221,7 +224,7 @@ export default function PostBottom({
             }}
           >
             3k comment
-          </Text>
+          </MonoText>
         </View>
       </View>
     </View>

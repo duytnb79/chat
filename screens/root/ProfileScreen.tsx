@@ -1,7 +1,6 @@
 import {
   KeyboardAvoidingView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   Keyboard,
   Platform,
@@ -10,6 +9,7 @@ import { Text, View } from "../../components/Themed";
 import { useState } from "react";
 import { RootTabScreenProps } from "../../types";
 import AuthService from "../../services/AuthService";
+import { MonoText } from "../../components/StyledText";
 
 export default function ProfileScreen({
   navigation,
@@ -20,7 +20,7 @@ export default function ProfileScreen({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ProfileScreen</Text>
+      <MonoText style={styles.title}>ProfileScreen</MonoText>
       <View
         style={styles.separator}
         lightColor="#eee"
@@ -28,7 +28,7 @@ export default function ProfileScreen({
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleLogout} style={styles.button}>
-          <Text style={styles.buttonText}>Logout</Text>
+          <MonoText style={styles.buttonText}>Logout</MonoText>
         </TouchableOpacity>
       </View>
     </View>

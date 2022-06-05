@@ -9,13 +9,14 @@ import {
 import { Text, View } from "../../components/Themed";
 import { useState } from "react";
 import { RootTabScreenProps } from "../../types";
+import { MonoText } from "../../components/StyledText";
 
 export default function LoveScreen({
   navigation,
 }: RootTabScreenProps<"LoveScreen">) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>LoveScreen</Text>
+      <MonoText style={styles.title}>LoveScreen</MonoText>
       <View
         style={styles.separator}
         lightColor="#eee"

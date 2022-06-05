@@ -27,6 +27,7 @@ import AuthService from "../../services/AuthService";
 import { auth } from "../../firebase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { IUser } from "../../services/UserService";
+import { MonoText } from "../StyledText";
 
 interface Props {
   First: React.ElementType<any>;
@@ -59,45 +60,43 @@ export default function Post({ postItem }: { postItem: IPost }) {
   }, [isReduceText, activeIndex]);
 
   const getReduceText = (text: string): JSX.Element => {
-    console.log("isReduceText", isReduceText);
-    if (text && text.length > 50 && isReduceText) {
-      text = text.slice(0, 50);
+    if (text && text.length > 30 && isReduceText) {
+      text = text.slice(0, 30);
       return (
         <TouchableOpacity onPress={() => setIsReduceText(!isReduceText)}>
-          <Text
+          <MonoText
             style={{
               color: Colors[colorScheme].text,
             }}
           >
             {text}...{" "}
-            <Text
+            <MonoText
               style={{
                 color: Colors[colorScheme].blurText,
               }}
             >
               more
-            </Text>
-          </Text>
+            </MonoText>
+          </MonoText>
         </TouchableOpacity>
       );
     }
 
     return (
       <TouchableOpacity onPress={() => setIsReduceText(!isReduceText)}>
-        <Text
+        <MonoText
           style={{
             color: Colors[colorScheme].text,
           }}
         >
           {text}
-        </Text>
+        </MonoText>
       </TouchableOpacity>
     );
   };
   const ref = React.useRef<TransitioningView | null>(null);
   const [isLikeImage, setIsLikeImage] = React.useState(false);
   const onPressLikeImage = (isFromChild?: any) => {
-    console.log("isLikeImage", isLikeImage);
     const nextStateIsLikeImage = !isLikeImage;
     setIsDisplayLikeHeart(true);
     setTimeout(() => {
@@ -161,14 +160,6 @@ export default function Post({ postItem }: { postItem: IPost }) {
                 size={80}
                 style={{
                   shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-
-                  elevation: 5,
                 }}
                 color={isLikeImage ? Colors.icon.color : "white"}
               />
@@ -210,25 +201,23 @@ export default function Post({ postItem }: { postItem: IPost }) {
           backgroundColor: "transparent",
         }}
       >
-        <Text
+        <MonoText
           adjustsFontSizeToFit={true}
           ellipsizeMode="tail"
           style={{
-            lineHeight: 22,
-            letterSpacing: 3,
             paddingHorizontal: 0,
             color: Colors[colorScheme].text,
             fontSize: fontSizes.h5,
           }}
         >
           {reduceText}
-        </Text>
+        </MonoText>
       </View>
     );
   };
 
   const handleOnMomentumScrollEnd = (e: any, state: any, context: any) => {
-    console.log(state.index, context.state.index, activeIndex);
+    // console.log(state.index, context.state.index, activeIndex);
     postItem.selectedIndexImage = context.state.index;
   };
 

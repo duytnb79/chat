@@ -10,6 +10,7 @@ import {
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import { useState } from "react";
+import { MonoText, MonoTextInput } from "../components/StyledText";
 
 export default function TabThreeScreen() {
   const [task, setTask] = useState("");
@@ -45,7 +46,7 @@ export default function TabThreeScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.writeTaskWrapper}
       >
-        <TextInput
+        <MonoTextInput
           style={styles.input}
           placeholder={"Write a task"}
           value={task}
@@ -54,7 +55,7 @@ export default function TabThreeScreen() {
         />
         <TouchableOpacity onPress={() => handleAddTask()}>
           <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
+            <MonoText style={styles.addText}>+</MonoText>
           </View>
         </TouchableOpacity>
       </KeyboardAvoidingView>

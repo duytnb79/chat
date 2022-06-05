@@ -39,6 +39,7 @@ import LinkingConfiguration from "./LinkingConfiguration";
 import { Text, View } from "../components/Themed";
 import { fontSizes } from "../constants";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { MonoText } from "../components/StyledText";
 
 export default function Navigation({
   colorScheme,
@@ -133,6 +134,10 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="HomeScreen"
       screenOptions={{
+        tabBarStyle: {
+          backgroundColor: "transparent",
+          height: 60,
+        },
         tabBarActiveTintColor: Colors[colorScheme].tint,
         headerTitle: "",
         headerStyle: {
@@ -147,13 +152,13 @@ function BottomTabNavigator() {
               backgroundColor: "transparent",
             }}
           >
-            <Text
+            <MonoText
               style={{
                 fontSize: fontSizes.h2,
               }}
             >
-              Instagram
-            </Text>
+              C.Instagram
+            </MonoText>
           </View>
         ),
         headerRight: () => (
@@ -199,31 +204,6 @@ function BottomTabNavigator() {
         ),
       }}
     >
-      {/* <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
-          title: "",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon fontSize={20} name="code" color={color} />
-          ),
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate("Modal")}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
-        })}
-      /> */}
       <BottomTab.Screen
         name="HomeScreen"
         component={HomeScreen}

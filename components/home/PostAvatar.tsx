@@ -12,6 +12,7 @@ import { IPost } from "../../services/PostService";
 import Colors from "../../constants/Colors";
 import useColorScheme from "../../hooks/useColorScheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MonoText } from "../StyledText";
 
 export default function PostAvatar({ postItem }: { postItem: IPost }) {
   const colorScheme = useColorScheme();
@@ -70,7 +71,7 @@ export default function PostAvatar({ postItem }: { postItem: IPost }) {
             uri: postItem.avatarUrl,
           }}
         />
-        <Text
+        <MonoText
           style={{
             color: Colors[colorScheme].text,
             fontSize: fontSizes.h5,
@@ -78,8 +79,8 @@ export default function PostAvatar({ postItem }: { postItem: IPost }) {
           }}
         >
           {postItem.userName}
-        </Text>
-        <Text
+        </MonoText>
+        <MonoText
           style={{
             color: Colors[colorScheme].text,
             fontSize: fontSizes.h5,
@@ -87,7 +88,7 @@ export default function PostAvatar({ postItem }: { postItem: IPost }) {
           }}
         >
           {calTimeSince(postItem.createdDate)}
-        </Text>
+        </MonoText>
       </View>
       <MaterialCommunityIcons
         name="dots-horizontal"

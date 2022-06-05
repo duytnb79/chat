@@ -27,6 +27,7 @@ import AuthService from "../../services/AuthService";
 // import { Text, View } from "../../components/Themed";
 import { RootTabScreenProps } from "../../types";
 import UserService, { IUser } from "../../services/UserService";
+import { MonoText, MonoTextInput } from "../../components/StyledText";
 // import { images, colorsConstant, icons, fontSizes } from "../../constants";
 // import { isValidEmail, isValidPassword } from "../../utilies/Validations";
 
@@ -55,13 +56,13 @@ export default function LoginScreen({
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
-        <TextInput
+        <MonoTextInput
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
-        <TextInput
+        <MonoTextInput
           placeholder="Password"
           value={password}
           onChangeText={(text) => setPassword(text)}
@@ -72,13 +73,13 @@ export default function LoginScreen({
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
+          <MonoText style={styles.buttonText}>Login</MonoText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate("RegisterScreen")}
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Register</Text>
+          <MonoText style={styles.buttonOutlineText}>Register</MonoText>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

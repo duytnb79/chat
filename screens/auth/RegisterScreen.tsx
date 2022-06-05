@@ -27,6 +27,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { RootTabScreenProps } from "../../types";
 import AuthService from "../../services/AuthService";
 import UserService from "../../services/UserService";
+import { MonoText } from "../../components/StyledText";
 // import { images, colorsConstant, icons, fontSizes } from "../../constants";
 // import { isValidEmail, isValidPassword } from "../../utilies/Validations";
 
@@ -66,13 +67,15 @@ export default function RegisterScreen({
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={handleSignUp} style={styles.button}>
-          <Text style={styles.buttonText}>Register</Text>
+          <MonoText style={styles.buttonText}>Register</MonoText>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => navigation.navigate("LoginScreen")}
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Already have account ?</Text>
+          <MonoText style={styles.buttonOutlineText}>
+            Already have account ?
+          </MonoText>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

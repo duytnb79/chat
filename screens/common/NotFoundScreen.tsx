@@ -9,12 +9,12 @@ export default function NotFoundScreen({
   // navigation.replace("Auth");
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>This screen doesn't exist.</Text>
+      <MonoText style={styles.title}>This screen doesn't exist.</MonoText>
       <TouchableOpacity
         onPress={() => navigation.replace("Auth")}
         style={styles.link}
       >
-        <Text style={styles.linkText}>Go to home screen!</Text>
+        <MonoText style={styles.linkText}>Go to home screen!</MonoText>
       </TouchableOpacity>
     </View>
   );
