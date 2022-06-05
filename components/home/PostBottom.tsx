@@ -8,6 +8,8 @@ import {
   ImageBackground,
   FlatList,
   ScrollView,
+  Touchable,
+  Pressable,
 } from "react-native";
 import { fontSizes } from "../../constants";
 import { IPost } from "../../services/PostService";
@@ -16,65 +18,87 @@ import useColorScheme from "../../hooks/useColorScheme";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { screenHeight, screenWidth } from "../../utilies/Device";
 import { SafeAreaView } from "react-native-safe-area-context";
+import AuthService from "../../services/AuthService";
 
-export default function PostBottom({ postItem }: { postItem: IPost }) {
+export default function PostBottom({
+  postItem,
+  onPressLikeImage,
+}: {
+  postItem: IPost;
+  onPressLikeImage: Function;
+}) {
   const colorScheme = useColorScheme();
-  const [isShowComment, setIsShowComment] = useState(false);
+  const [isShowComment, setIsShowComment] = useState(true);
   const [numberPicture, setNumberPicture] = useState(
     postItem.listImageUrl.length
   );
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    AuthService.getCurrentUser().then((user) => {
+      setUser(user);
+    });
+  }, [postItem]);
 
   const buildLinePicture = (numberPicture: number) => {
     return (
+      // <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
-        style={{
+        horizontal
+        contentContainerStyle={{
           flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          alignSelf: "center",
+          marginHorizontal: 5,
+          height: 10,
+          // backgroundColor: "blue",
+        }}
+        style={{
           maxHeight: 10,
-          paddingHorizontal: 10,
-          paddingBottom: 4,
-          paddingTop: 40,
-          // justifyContent: "center",
-          // alignItems: "center",
           width: screenWidth,
           padding: 0,
           margin: 0,
-          // backgroundColor: "red",
+          // backgroundColor: "yellow",
         }}
       >
-        {/* <Text style={{ color: "green" }}>dsadsa</Text> */}
-        <FlatList
-          data={[...Array(numberPicture).keys()]}
-          numColumns={numberPicture}
-          keyExtractor={(item) => item.toString()}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              key={`index${index}`}
+        {[...Array(numberPicture).keys()].map((item, index) => (
+          <TouchableOpacity
+            key={`index${index}`}
+            style={{
+              flex: 1,
+              paddingVertical: 1,
+              paddingHorizontal: 2,
+              height: 1,
+              // backgroundColor: "yellow",
+            }}
+          >
+            <View
               style={{
-                // width: "8%",
-                height: 2.4,
-                flex: 0.5,
-                paddingHorizontal: 3,
-                // marginVertical: 5,
+                paddingHorizontal: 15,
+                height: 1.5,
+                backgroundColor:
+                  index == postItem.selectedIndexImage
+                    ? Colors[colorScheme].text
+                    : Colors[colorScheme].blurText,
                 // backgroundColor: "red",
               }}
-            >
-              <View
+            ></View>
+            {/* <MaterialCommunityIcons
+                name="circle"
                 style={{
-                  // width: "8%",
-                  height: 2.4,
-                  flex: 0.5,
-                  backgroundColor:
-                    index == postItem.selectedIndexImage
-                      ? Colors[colorScheme].text
-                      : Colors[colorScheme].blurText,
+                  backgroundColor: "green",
                 }}
-              >
-                <Text> dsa</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
+                size={index == postItem.selectedIndexImage ? 12 : 8}
+                color={
+                  index == postItem.selectedIndexImage
+                    ? Colors.icon.color
+                    : Colors[colorScheme].tint
+                }
+              /> */}
+          </TouchableOpacity>
+        ))}
       </ScrollView>
+      // </SafeAreaView>
     );
   };
 
@@ -86,27 +110,34 @@ export default function PostBottom({ postItem }: { postItem: IPost }) {
         width: "100%",
         height: "100%",
         flexDirection: "column",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "flex-start",
         // paddingsTop: 30,
         backgroundColor: "transparent",
       }}
     >
       {isShowComment ? (
-        <TouchableOpacity>
-          <Text
-            style={{
-              color: Colors[colorScheme].text,
-              fontSize: fontSizes.h5,
-              paddingTop: 10,
-              paddingHorizontal: 8,
-              textAlign: "left",
-              fontWeight: "500",
-            }}
-          >
-            Add a comment ...
-          </Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            width: screenWidth,
+          }}
+        >
+          <TouchableOpacity>
+            <Text
+              style={{
+                color: Colors[colorScheme].text,
+                fontSize: fontSizes.h6,
+                padding: 8,
+                textAlign: "left",
+                fontWeight: "600",
+              }}
+            >
+              Add a comment ...
+            </Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <View></View>
       )}
@@ -118,23 +149,33 @@ export default function PostBottom({ postItem }: { postItem: IPost }) {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          backgroundColor: "transparent",
         }}
       >
         {/* <Text>dsadasdas</Text> */}
         <View
           style={{
+            flex: 1,
             flexDirection: "row",
-            alignItems: "center",
+
+            alignItems: "flex-start",
+            paddingLeft: 7,
             justifyContent: "flex-start",
             backgroundColor: "transparent",
           }}
         >
-          <MaterialCommunityIcons
-            name="heart"
-            size={22}
-            style={{ paddingVertical: 0, paddingHorizontal: 7 }}
-            color={Colors[colorScheme].tint}
-          />
+          <Pressable onPress={() => onPressLikeImage(true)}>
+            <MaterialCommunityIcons
+              name="heart"
+              size={22}
+              style={{ paddingVertical: 0, paddingHorizontal: 7 }}
+              color={
+                user && postItem.likedUsers.includes(user.userId)
+                  ? Colors.icon.color
+                  : Colors[colorScheme].tint
+              }
+            />
+          </Pressable>
           <MaterialCommunityIcons
             name="comment"
             size={22}
@@ -154,8 +195,10 @@ export default function PostBottom({ postItem }: { postItem: IPost }) {
             alignItems: "flex-end",
             justifyContent: "flex-end",
             paddingVertical: 10,
+            paddingRight: 7,
             flexWrap: "nowrap",
             paddingHorizontal: 10,
+            backgroundColor: "transparent",
           }}
         >
           <Text
@@ -173,6 +216,7 @@ export default function PostBottom({ postItem }: { postItem: IPost }) {
               color: Colors[colorScheme].text,
               fontSize: fontSizes.h6,
               paddingVertical: 1,
+
               textAlign: "left",
             }}
           >

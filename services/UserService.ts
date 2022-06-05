@@ -1,4 +1,5 @@
 import DbService from "./DbService";
+import { IService } from "./IService";
 
 export interface IUser {
   userId: string | null;

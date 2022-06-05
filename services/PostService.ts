@@ -10,6 +10,7 @@ export interface IPost {
   content: string;
   createdDate: string;
   selectedIndexImage: number | 0;
+  likedUsers: string[];
 }
 
 export default class PostService implements IService<IPost> {

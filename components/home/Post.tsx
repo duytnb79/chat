@@ -6,7 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  Pressable,
 } from "react-native";
+import {
+  Transition,
+  Transitioning,
+  TransitioningView,
+} from "react-native-reanimated";
 import { fontSizes } from "../../constants";
 import { IPost } from "../../services/PostService";
 import { Dimensions } from "react-native";
@@ -16,12 +22,30 @@ import PostAvatar from "./PostAvatar";
 import PostBottom from "./PostBottom";
 import Swiper from "react-native-swiper";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AuthService from "../../services/AuthService";
+import { auth } from "../../firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { IUser } from "../../services/UserService";
+
+interface Props {
+  First: React.ElementType<any>;
+  Second: React.ElementType<any>;
+}
 
 export default function Post({ postItem }: { postItem: IPost }) {
   const screenWidth = Dimensions.get("window").width;
   const screenHeight = Dimensions.get("window").height;
-  const heightPost = screenHeight * 0.5;
+  const heightPost = screenHeight * 0.7;
   const colorScheme = useColorScheme();
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    AuthService.getCurrentUser().then((user) => {
+      setUser(user);
+    });
+  }, [postItem]);
+  const [isDisplayLikeHeart, setIsDisplayLikeHeart] = useState(false);
 
   const [isReduceText, setIsReduceText] = useState(true);
   const [reduceText, setReduceText] = useState(null);
@@ -29,15 +53,15 @@ export default function Post({ postItem }: { postItem: IPost }) {
   const [swiper, setSwiper] = useState() as any;
 
   useEffect(() => {
-    const row = getReduceText(postItem.content) as JSX.Element;
-    setReduceText(row as any);
+    const content = getReduceText(postItem.content) as JSX.Element;
+    setReduceText(content as any);
     postItem.selectedIndexImage = activeIndex;
   }, [isReduceText, activeIndex]);
 
   const getReduceText = (text: string): JSX.Element => {
     console.log("isReduceText", isReduceText);
-    if (text && text.length && isReduceText) {
-      text = text.slice(0, 10);
+    if (text && text.length > 50 && isReduceText) {
+      text = text.slice(0, 50);
       return (
         <TouchableOpacity onPress={() => setIsReduceText(!isReduceText)}>
           <Text
@@ -70,23 +94,104 @@ export default function Post({ postItem }: { postItem: IPost }) {
       </TouchableOpacity>
     );
   };
+  const ref = React.useRef<TransitioningView | null>(null);
+  const [isLikeImage, setIsLikeImage] = React.useState(false);
+  const onPressLikeImage = (isFromChild?: any) => {
+    console.log("isLikeImage", isLikeImage);
+    const nextStateIsLikeImage = !isLikeImage;
+    setIsDisplayLikeHeart(true);
+    setTimeout(() => {
+      setIsDisplayLikeHeart(false);
+    }, 700);
+    if (!nextStateIsLikeImage && !isFromChild) return;
+    if (nextStateIsLikeImage && !postItem.likedUsers.includes(user.userId)) {
+      postItem.likedUsers.push(user.userId);
+    } else if (
+      !nextStateIsLikeImage &&
+      postItem.likedUsers.includes(user.userId)
+    ) {
+      postItem.likedUsers.splice(
+        postItem.likedUsers.findIndex((i) => i == user.userId)
+      );
+    }
+    setIsLikeImage(!isLikeImage);
+  };
+
+  // const onPressLikeImage = () => {
+  //   toggleLikeImage();
+  // };
+
+  const transition = (
+    <Transition.Together>
+      <Transition.Out type="scale" durationMs={100} />
+      <Transition.Change interpolation="easeInOut" />
+      <Transition.In type="scale" durationMs={100} delayMs={50} />
+    </Transition.Together>
+  );
 
   const buildImageSlider = () => {
     const rows: JSX.Element[] = [];
     for (const imageUrl of postItem.listImageUrl) {
       rows.push(
-        <Image
+        <Pressable
+          style={({ pressed }) => ({
+            opacity: pressed ? 1 : 1,
+          })}
+          onPress={onDoublePress}
           key={imageUrl}
-          style={{
-            width: screenWidth,
-            height: "100%",
-            resizeMode: "cover",
-            opacity: isReduceText ? 1 : 0.5,
-          }}
-          source={{
-            uri: imageUrl,
-          }}
-        />
+        >
+          {!isDisplayLikeHeart ? (
+            <View></View>
+          ) : (
+            <Pressable
+              // onPress={onPressLikeImage}
+
+              style={({ pressed }) => ({
+                opacity: pressed ? 1.2 : 1,
+                position: "absolute",
+                zIndex: isDisplayLikeHeart ? 1000 : 0,
+                alignItems: "center",
+                justifyContent: "center",
+                width: screenWidth,
+                height: contentHeight * 0.85,
+              })}
+            >
+              <MaterialCommunityIcons
+                name="heart"
+                size={80}
+                style={{
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                }}
+                color={isLikeImage ? Colors.icon.color : "white"}
+              />
+            </Pressable>
+          )}
+
+          <Image
+            style={{
+              width: screenWidth,
+              height: contentHeight,
+              resizeMode: "cover",
+              opacity:
+                isDisplayLikeHeart || !isReduceText
+                  ? !isReduceText
+                    ? 0.5
+                    : 0.95
+                  : 1,
+            }}
+            source={{
+              uri: imageUrl,
+            }}
+          />
+        </Pressable>
       );
     }
     return rows;
@@ -98,9 +203,9 @@ export default function Post({ postItem }: { postItem: IPost }) {
       <View
         style={{
           maxHeight: isReduceText ? 20 : 1000,
-          paddingHorizontal: 8,
+          paddingHorizontal: 0,
           position: "absolute",
-          bottom: 10,
+          bottom: isReduceText ? 10 : 45,
           left: 8,
           backgroundColor: "transparent",
         }}
@@ -109,7 +214,9 @@ export default function Post({ postItem }: { postItem: IPost }) {
           adjustsFontSizeToFit={true}
           ellipsizeMode="tail"
           style={{
-            lineHeight: 20,
+            lineHeight: 22,
+            letterSpacing: 3,
+            paddingHorizontal: 0,
             color: Colors[colorScheme].text,
             fontSize: fontSizes.h5,
           }}
@@ -124,40 +231,67 @@ export default function Post({ postItem }: { postItem: IPost }) {
     console.log(state.index, context.state.index, activeIndex);
     postItem.selectedIndexImage = context.state.index;
   };
-  console.log("activeIndex", activeIndex);
 
-  const handleOnIndexChanged = (index: number) => {
-    console.log(index, "ss");
-    console.log(swiper);
-    console.log("setActiveIndex", activeIndex);
+  const headerHeight = 70;
+  const contentHeight = 560;
+  const paddingImage = 40;
+  const [lastPressTime, setLastPressTime] = useState(new Date().getTime());
+  const [footerHeight, setFooterHeight] = useState(0);
+
+  const onLayout = (event) => {
+    const { x, y, height, width } = event.nativeEvent.layout;
+    setFooterHeight(height - headerHeight - contentHeight);
+  };
+
+  const onDoublePress = (date) => {
+    const time = new Date().getTime();
+    const delta = time - lastPressTime;
+
+    const DOUBLE_PRESS_DELAY = 400;
+    if (delta < DOUBLE_PRESS_DELAY) {
+      // Success double press
+      onPressLikeImage();
+    } else {
+      if (!isReduceText) {
+        setIsReduceText(true);
+      }
+    }
+    setLastPressTime(time);
   };
 
   return (
     <View
+      onLayout={onLayout}
       style={{
         ...styles.item,
         height: "100%",
-        // borderWidth: 0.1,
-        backgroundColor: "transparent",
-        // borderColor: "white",
       }}
     >
-      <PostAvatar postItem={postItem} />
       <ImageBackground
         style={{
           width: screenWidth,
-          height: screenHeight,
-          zIndex: -1,
+          height: "100%",
+          zIndex: -10,
+          opacity: 0.35,
           position: "absolute",
-          opacity: 0.25,
-          maxHeight: screenHeight + 20,
+          top: 0,
         }}
-        blurRadius={20}
+        blurRadius={35}
         source={{
           uri: postItem.listImageUrl[0],
         }}
       />
-      <View style={{ width: screenWidth, height: heightPost }}>
+      <View style={{ height: headerHeight, backgroundColor: "transparent" }}>
+        <PostAvatar postItem={postItem} />
+      </View>
+
+      <View
+        style={{
+          width: screenWidth,
+          height: contentHeight,
+          paddingVertical: paddingImage,
+        }}
+      >
         <Swiper
           key={3}
           scrollEnabled={true}
@@ -186,9 +320,13 @@ export default function Post({ postItem }: { postItem: IPost }) {
         >
           {buildImageSlider()}
         </Swiper>
+
         {buildReduceText()}
       </View>
-      <PostBottom postItem={postItem} />
+
+      <View style={{ height: footerHeight }}>
+        <PostBottom postItem={postItem} onPressLikeImage={onPressLikeImage} />
+      </View>
     </View>
   );
 }
@@ -199,7 +337,7 @@ const styles = StyleSheet.create({
     padding: 0,
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
   },
   wrapper: {},
   slide1: {

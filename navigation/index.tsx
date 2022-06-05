@@ -46,16 +46,12 @@ export default function Navigation({
   colorScheme: ColorSchemeName;
 }) {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {/* <SafeAreaProvider> */}
-      <NavigationContainer
-        linking={LinkingConfiguration}
-        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      >
-        <RootNavigator />
-      </NavigationContainer>
-      {/* </SafeAreaProvider> */}
-    </SafeAreaView>
+    <NavigationContainer
+      linking={LinkingConfiguration}
+      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+    >
+      <RootNavigator />
+    </NavigationContainer>
   );
 }
 
@@ -67,7 +63,14 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Auth" screenOptions={{}}>
+    <Stack.Navigator
+      initialRouteName="Auth"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "blue",
+        },
+      }}
+    >
       <Stack.Screen
         name="Auth"
         component={AuthTabNavigator}
@@ -78,6 +81,9 @@ function RootNavigator() {
         component={BottomTabNavigator}
         options={{
           headerShown: false,
+          headerStyle: {
+            backgroundColor: "yellow",
+          },
         }}
       />
       <Stack.Screen
@@ -125,20 +131,18 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="HomeScreen"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
         headerTitle: "",
         headerStyle: {
-          // height: 80,
+          backgroundColor: "transparent",
         },
         headerLeft: () => (
           <View
             style={{
               flex: 1,
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "center",
+              position: "absolute",
               paddingHorizontal: 14,
               backgroundColor: "transparent",
             }}
@@ -162,7 +166,6 @@ function BottomTabNavigator() {
               justifyContent: "space-between",
               paddingHorizontal: 14,
               height: "100%",
-              width: "40%",
               backgroundColor: "transparent",
             }}
           >
@@ -175,6 +178,7 @@ function BottomTabNavigator() {
               <MaterialCommunityIcons
                 name="home"
                 size={20}
+                style={{ paddingHorizontal: 7 }}
                 color={Colors[colorScheme].tint}
               />
             </Pressable>
@@ -187,6 +191,7 @@ function BottomTabNavigator() {
               <MaterialCommunityIcons
                 name="facebook-messenger"
                 size={20}
+                style={{ paddingHorizontal: 7 }}
                 color={Colors[colorScheme].tint}
               />
             </Pressable>

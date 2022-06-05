@@ -41,11 +41,6 @@ export default function LoginScreen({
   }, []);
 
   const handleLogin = async () => {
-    await AuthService.login({
-      auth: auth,
-      email: email,
-      password: password,
-    });
     const user = await AuthService.login({
       auth: auth,
       email: email,
@@ -115,7 +110,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: "#0782F9",
     width: "100%",
-    height: "50%",
+    height: "20%",
     display: "flex",
     padding: 15,
     borderRadius: 10,

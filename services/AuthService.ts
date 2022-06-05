@@ -18,6 +18,15 @@ export default class AuthService {
     return getIdToken(user);
   }
 
+  static getTenantId() {
+    return auth.tenantId;
+  }
+
+  static async getCurrentUser() {
+    const userStr = await AsyncStorage.getItem("user");
+    return JSON.parse(userStr) as IUser;
+  }
+
   static async onAuthStateChanged(navigation: any) {
     auth.onAuthStateChanged(async (responseUser) => {
       if (responseUser) {
